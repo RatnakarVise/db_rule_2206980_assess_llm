@@ -71,7 +71,6 @@ Your job:
    - Reference program/include/type/name.
    - Ask to locate all obsolete table reads/writes.
    - Replace them with MATDOC/CDS views ensuring functional equivalence.
-   - Require JSON output with keys: original_code_snippet, remediated_code_snippet, changes[] (line/before/after/reason).
 
 Return ONLY strict JSON:
 {{
