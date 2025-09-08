@@ -31,6 +31,7 @@ class MMIMUsage(BaseModel):
     used_fields: List[str]
     suggested_fields: List[str]
     suggested_statement: Optional[str] = None
+    snippet: Optional[str] = None
 
 
 class NoteContext(BaseModel):
@@ -53,7 +54,11 @@ def summarize_context(ctx: NoteContext) -> dict:
 
 
 # ---- LangChain Prompt ----
-SYSTEM_MSG = "You are a precise ABAP reviewer familiar with SAP Note 2206980 (MM-IM Simplification) who outputs strict JSON only."
+SYSTEM_MSG = """You are a precise ABAP reviewer familiar with SAP Note 2206980 (MM-IM Simplification) who outputs strict JSON only."
+You are evaluating a system context related to SAP OSS Note 2206980. We provide:
+- system context
+- list of detected changes in code (with offending code snippets when available)
+"""
 
 USER_TEMPLATE = """
 You are evaluating a system context related to SAP OSS Note 2206980 (S/4HANA MM-IM Data Model Changes).
@@ -66,6 +71,7 @@ Your job:
    - If MKPF/MSEG is found, suggest MATDOC.
    - If MARD/MARC/MKPF aggregate/split/history tables are found, suggest corresponding CDS views (e.g., NSDM_DDL_MARD).
    - Merge all these recommendations into `suggested_statement`.
+   - Ignore the place where we are doing UPDATE functionality of these MARC/MARD/MKPFetc tables.
 
 2) Provide an actionable **LLM remediation prompt**:
    - Reference program/include/type/name.
